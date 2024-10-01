@@ -3,6 +3,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "category")
 @Getter
@@ -17,4 +20,7 @@ public class Category {
     long id;
     String title;
     String description;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL)
+    List<SubCategory> subCategories =new ArrayList<>();
+
 }
