@@ -3,59 +3,100 @@ package com.example.tpsb.Controllers;
 import com.example.tpsb.Models.Products;
 import com.example.tpsb.Services.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "/api")
-@RestController
+@Controller
 @RequestMapping("/products")
 public class ProductsController {
 
     @Autowired
     private ProductsService productsService;
 
+
     @GetMapping
-    public ResponseEntity<List<Products>> getAllProducts() {
+    public String getAllProducts(Model model) {
         List<Products> products = productsService.getAllProducts();
-        return ResponseEntity.ok(products);
+        model.addAttribute("products", products);
+        return "products";
     }
+
 
     @GetMapping("/{id}")
-    public ResponseEntity<Products> getProductById(@PathVariable Long id) {
+    public String getProductById(@PathVariable Long id, Model model) {
         Optional<Products> product = productsService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "product"; // Return the product details page if the product is found
+        } else {
+            model.addAttribute("message", "Product not found with ID: " + id);
+            return "product-not-found"; // Return the custom "product not found" page
+        }
     }
+
+
+
+
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Products> getProductByName(@PathVariable String name) {
+    public String getProductByName(@PathVariable String name, Model model) {
         Optional<Products> product = productsService.getProductByName(name);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "product";
+        } else {
+            return "product-not-found";
+        }
     }
+
 
     @GetMapping("/subcategory/{subcategoryId}")
-    public ResponseEntity<List<Products>> getProductsBySubcategoryId(@PathVariable int subcategoryId) {
+    public String getProductsBySubcategoryId(@PathVariable int subcategoryId, Model model) {
         List<Products> products = productsService.getProductsBySubcategoryId(subcategoryId);
-        return ResponseEntity.ok(products);
+        model.addAttribute("products", products);
+        return "subcategory-products";
     }
+
+    @GetMapping("/add")
+    public String showAddProductForm(Model model) {
+        model.addAttribute("product", new Products());
+        return "add-product";
+    }
+
 
     @PostMapping("/add")
-    public ResponseEntity<Products> createProduct(@RequestBody Products product) {
-        Products newProduct = productsService.saveProduct(product);
-        return ResponseEntity.ok(newProduct);
+    public String createProduct(@ModelAttribute("product") Products product) {
+        productsService.saveProduct(product);
+        return "redirect:/products";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductById(@PathVariable Long id) {
+    @PostMapping("/delete/{id}")
+    public String deleteProductById(@PathVariable Long id) {
         productsService.deleteProductById(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/products";
     }
 
-    @DeleteMapping("/name/{name}")
-    public ResponseEntity<Void> deleteProductByName(@PathVariable String name) {
-        productsService.deleteProductByName(name);
-        return ResponseEntity.noContent().build();
+
+    @GetMapping("/edit/{id}")
+    public String showEditProductForm(@PathVariable Long id, Model model) {
+        Optional<Products> product = productsService.getProductById(id);
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "edit-product";
+        } else {
+            return "product-not-found"; // Custom error page
+        }
     }
+
+    @PostMapping("/edit/{id}")
+    public String updateProduct(@PathVariable Long id, @ModelAttribute("product") Products product) {
+        product.setId(id);
+        productsService.saveProduct(product);
+        return "redirect:/products";
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.tpsb.Controllers;
+package com.example.tpsb.RestControllers;
 
 import com.example.tpsb.Models.Category;
 import com.example.tpsb.Services.CategoryService;
@@ -10,7 +10,7 @@ import java.util.List;
 @CrossOrigin(origins = "/api")
 @RestController
 @RequestMapping("/categories")
-public class CategoryController {
+public class CategoryRestController {
 
     @Autowired
     private CategoryService categoryService;

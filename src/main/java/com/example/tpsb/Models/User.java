@@ -20,6 +20,5 @@ public class User {
     String password;
     String email;
     String phone;
-    float salary;
 
 }

@@ -1,4 +1,4 @@
-package com.example.tpsb.RestControllers;
+package com.example.tpsb.RestRestControllers;
 
 import com.example.tpsb.Models.Customer;
 import com.example.tpsb.Services.CustomerService;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "/api")
 @RestController
 @RequestMapping("/customers")
-public class CustomerController {
+public class CustomerRestController {
 
     @Autowired
     private CustomerService customerService;

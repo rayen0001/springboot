@@ -1,4 +1,4 @@
-package com.example.tpsb.Controllers;
+package com.example.tpsb.RestControllers;
 
 import com.example.tpsb.Models.SubCategory;
 import com.example.tpsb.Services.SubCategoryService;
@@ -11,7 +11,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "/api")
 @RestController
 @RequestMapping("/subcategories")
-public class SubCategoryController {
+public class SubCategoryRestController {
 
     @Autowired
     private SubCategoryService subCategoryService;
