@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Edit Product</title>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <title>Edit Product</title>
 </head>
 <body>
 <div class="container">
@@ -30,8 +31,26 @@
                     <input type="number" step="0.01" id="price" th:field="*{price}" class="form-control" placeholder="Enter product price" />
                 </div>
 
+                <div class="form-group">
+                    <label for="provider">Provider</label>
+                    <select id="provider" th:field="*{provider}" class="form-control">
+                        <option th:each="provider : ${providers}" th:value="${provider.id}"
+                                th:text="${provider.name}"
+                                th:selected="${provider.id == product.provider.id}">Provider Name</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subcategory">Subcategory</label>
+                    <select id="subcategory" th:field="*{subcategory}" class="form-control">
+                        <option th:each="subcategory : ${subcategories}" th:value="${subcategory.id}"
+                                th:text="${subcategory.name}"
+                                th:selected="${subcategory.id == product.subcategory.id}">Subcategory Name</option>
+                    </select>
+                </div>
+
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Update Product</button>
+                    <button type="submit" class="btn btn-success">Update Product</button>
                     <a href="/products" class="btn btn-secondary ml-2">Back to Products List</a>
                 </div>
             </form>

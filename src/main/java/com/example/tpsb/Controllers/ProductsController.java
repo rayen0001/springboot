@@ -1,7 +1,11 @@
 package com.example.tpsb.Controllers;
 
 import com.example.tpsb.Models.Products;
+import com.example.tpsb.Models.Provider;
+import com.example.tpsb.Models.SubCategory;
+import com.example.tpsb.Services.Impl.ProviderServiceImpl;
 import com.example.tpsb.Services.ProductsService;
+import com.example.tpsb.Services.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +20,17 @@ public class ProductsController {
 
     @Autowired
     private ProductsService productsService;
+    @Autowired
+    private ProviderServiceImpl providerService;
+    @Autowired
+    private SubCategoryService subCategoryService;
 
 
     @GetMapping
     public String getAllProducts(Model model) {
         List<Products> products = productsService.getAllProducts();
         model.addAttribute("products", products);
-        return "products";
+        return "product/products";
     }
 
 
@@ -31,10 +39,10 @@ public class ProductsController {
         Optional<Products> product = productsService.getProductById(id);
         if (product.isPresent()) {
             model.addAttribute("product", product.get());
-            return "product"; // Return the product details page if the product is found
+            return "product/product";
         } else {
             model.addAttribute("message", "Product not found with ID: " + id);
-            return "product-not-found"; // Return the custom "product not found" page
+            return "product/product-not-found";
         }
     }
 
@@ -47,9 +55,9 @@ public class ProductsController {
         Optional<Products> product = productsService.getProductByName(name);
         if (product.isPresent()) {
             model.addAttribute("product", product.get());
-            return "product";
+            return "product/product";
         } else {
-            return "product-not-found";
+            return "product/product-not-found";
         }
     }
 
@@ -58,21 +66,23 @@ public class ProductsController {
     public String getProductsBySubcategoryId(@PathVariable int subcategoryId, Model model) {
         List<Products> products = productsService.getProductsBySubcategoryId(subcategoryId);
         model.addAttribute("products", products);
-        return "subcategory-products";
+        return "product/subcategory-products";
     }
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
         model.addAttribute("product", new Products());
-        return "add-product";
+        model.addAttribute("providers", providerService.getAllProviders());
+        model.addAttribute("subcategories", subCategoryService.getAllSubCategories());
+        return "product/add-product";
     }
-
 
     @PostMapping("/add")
     public String createProduct(@ModelAttribute("product") Products product) {
         productsService.saveProduct(product);
         return "redirect:/products";
     }
+
 
     @PostMapping("/delete/{id}")
     public String deleteProductById(@PathVariable Long id) {
@@ -86,9 +96,17 @@ public class ProductsController {
         Optional<Products> product = productsService.getProductById(id);
         if (product.isPresent()) {
             model.addAttribute("product", product.get());
-            return "edit-product";
+
+            // Fetch providers and subcategories for the dropdowns
+            List<Provider> providers = providerService.getAllProviders(); // Assume you have a ProviderService
+            List<SubCategory> subcategories = subCategoryService.getAllSubCategories(); // Assume you have a SubcategoryService
+
+            model.addAttribute("providers", providers);
+            model.addAttribute("subcategories", subcategories);
+
+            return "product/edit-product";
         } else {
-            return "product-not-found"; // Custom error page
+            return "product/product-not-found"; // Custom error page
         }
     }
 
@@ -98,5 +116,6 @@ public class ProductsController {
         productsService.saveProduct(product);
         return "redirect:/products";
     }
+
 
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <title>Edit Category</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="text-center my-4">Edit Category</h1>
+            <form th:action="@{/categories/update/{id}(id=${category.id})}" th:object="${category}" method="post">
+                <div class="form-group">
+                    <label for="title">Category Title</label>
+                    <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Enter category title" required />
+                </div>
+                <div class="form-group">
+                    <label for="description">Category Description</label>
+                    <textarea id="description" th:field="*{description}" class="form-control" rows="4" placeholder="Enter category description"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Update Category</button>
+                    <a href="/categories" class="btn btn-secondary ml-2">Back to Categories List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</body>
+</html>

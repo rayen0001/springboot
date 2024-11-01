@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface ProductsRepository extends JpaRepository<Products, Long> {
+public interface      ProductsRepository extends JpaRepository<Products, Long> {
     Products getProductsByName(String name);
     List<Products> getProductsBySubcategoryId( int subcategory_id);
     void deleteProductByName(String name);
